@@ -15,13 +15,15 @@
   "dependencies": {
     "axios": "^0.20.0",
     "bcryptjs": "^2.4.3",
-    "bootstrap": "^4.5.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.0",
     "express-jwt": "^6.0.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
-    "mongodb": "^3.6.2"
+    "mongodb": "^3.6.2",
+    "popper.js": "^1.14.3",
+    "uid": "^2.0.0",
+    "zarinpal-checkout": "^0.2.7"
   }
 }
