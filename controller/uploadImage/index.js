@@ -1,8 +1,4 @@
 const saveImage = (req, res) => {
-  //   if (!req.user) {
-  //     return res.status(404).send({ massage: "کاربر مجاز نمیباشد" });
-  //   }
-  console.log(req.files);
   if (!req.files || req.body.length === 0) {
     return res.status(400).send("عکسی ارسال نشد.");
   }
@@ -16,4 +12,5 @@ const saveImage = (req, res) => {
     res.send({ path: filepath });
   });
 };
+
 module.exports = saveImage;

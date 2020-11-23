@@ -10,11 +10,36 @@ const repo = {
       }
     });
   },
+  fetchAll: (next) => {
+    baseRepo.connect((err, db) => {
+      if (err) next(err);
+      else {
+        db.collection("paymentLog").find({}).toArray(next);
+      }
+    });
+  },
   findByAuthority: (authority, next) => {
     baseRepo.connect((err, db) => {
       if (err) next(err);
       else {
         db.collection("paymentLog").findOne({ authority: authority }, next);
+      }
+    });
+  },
+  findByTrackingCode: (trackingCode, next) => {
+    baseRepo.connect((err, db) => {
+      if (err) next(err);
+      else {
+        db.collection("paymentLog").findOne({ trackingCode }, next);
+      }
+    });
+  },
+  findById: (_id, next) => {
+    baseRepo.connect((err, db) => {
+      if (err) next(err);
+      else {
+        const objId = new mongoDb.ObjectID(_id);
+        db.collection("paymentLog").findOne({ _id: objId }, next);
       }
     });
   },
@@ -28,6 +53,15 @@ const repo = {
           { $set: payment },
           next
         );
+      }
+    });
+  },
+  delete: (_id, next) => {
+    baseRepo.connect((err, db) => {
+      if (err) next(err);
+      else {
+        const objId = new mongoDb.ObjectID(_id);
+        db.collection("paymentLog").deleteOne({ _id: objId }, next);
       }
     });
   },

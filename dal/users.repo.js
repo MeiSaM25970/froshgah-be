@@ -38,9 +38,15 @@ const repo = {
     baseRepo.connect((err, db) => {
       if (err) next(err);
       else {
-        const objId = new ObjectId(user._id);
-        delete user._id;
-        db.collection("user").updateOne({ _id: objId }, { $set: user }, next);
+        if (user._id) {
+          const objId = new ObjectId(user._id);
+          delete user._id;
+          db.collection("users").updateOne(
+            { _id: objId },
+            { $set: user },
+            next
+          );
+        } else next({ msg: "آیدی را وارد کنید." });
       }
     });
   },

@@ -7,6 +7,8 @@ const mongodb = require("mongodb");
 const zPal = require("zarinpal-checkout");
 const _ = require("lodash");
 const uid = require("uid");
+const moment = require("moment-jalaali");
+
 const checkoutController = {
   create: (req, res) => {
     const userInfo = req.body;
@@ -47,13 +49,21 @@ const checkoutController = {
                 })
                 .then((response) => {
                   if (response.status === 100) {
+                    const date = moment().format("YYYY/MM/DD HH:mm:ss");
+
                     const paymentLog = {
                       productId: new mongodb.ObjectId(userInfo.productId),
                       price: price,
                       authority: response.authority,
                       description,
-                      date: new Date(),
+                      date: date,
                       mobile: userInfo.tel,
+                      productName: userInfo.productName,
+                      fullName: userInfo.fullName,
+                      area: userInfo.area,
+                      city: userInfo.city,
+                      address: userInfo.address,
+                      postCode: userInfo.postCode,
                     };
                     paymentRepo.create(paymentLog, (err) => {
                       if (err) res.status(500).send(err);
@@ -99,6 +109,13 @@ const checkoutController = {
                 isSuccess: true,
                 isAdded: true,
                 trackingCode: trackingCode,
+                status: "new",
+                productName: data.productName,
+                fullName: data.fullName,
+                area: data.area,
+                city: data.city,
+                address: data.address,
+                postCode: data.postCode,
               };
               paymentRepo.update(data._id, newPayment, (err) => {
                 if (err) res.status(500).send(err);
@@ -114,6 +131,12 @@ const checkoutController = {
                 mobile: data.mobile,
                 isSuccess: false,
                 isAdded: false,
+                productName: data.productName,
+                fullName: data.fullName,
+                area: data.area,
+                city: data.city,
+                address: data.address,
+                postCode: data.postCode,
               };
               paymentRepo.update(data._id, newPayment, (err) => {
                 if (err) res.status(500).send(err);
@@ -130,6 +153,12 @@ const checkoutController = {
         }
       });
     }
+  },
+  fetchPaymentLog: (req, res) => {
+    paymentRepo.fetchAll((err, data) => {
+      if (err) res.status(500).send(err);
+      else res.send(data);
+    });
   },
 };
 

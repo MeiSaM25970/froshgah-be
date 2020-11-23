@@ -34,7 +34,6 @@ const controller = {
     });
   },
   register: (req, res) => {
-    console.log(req.user);
     const credentials = _.pick(req.body, ["username", "email", "password"]);
     credentials.username = credentials.username.toLowerCase();
     usersRepo.findByUsername(credentials.username, (err, user) => {

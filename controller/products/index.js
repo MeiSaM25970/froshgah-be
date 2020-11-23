@@ -1,7 +1,4 @@
 const productRepo = require("../../dal/product.repo");
-// const Product = require("../../models/product.model");
-
-// Product.findById("ufwh923090").then((product) => res.send(product));
 
 const productsController = {
   create: (req, res) => {
@@ -13,7 +10,6 @@ const productsController = {
       if (err) res.status(500).send(err);
       else res.send(result);
     });
-    console.log(product);
   },
   fetchAll: (req, res) => {
     productRepo.fetchAll((err, data) => {
@@ -29,22 +25,20 @@ const productsController = {
     });
   },
   delete: (req, res) => {
-    const product = ({ _id, text } = req.body);
-    productRepo.delete(product._id, (err, result) => {
+    const productId = req.params.id;
+    productRepo.delete(productId, (err, result) => {
       if (err) res.status(500).send(err);
       else res.send(result);
     });
   },
   update: (req, res) => {
-    const product = ({ _id, text, isDone } = req.body);
-    productRepo.update(
-      todo._id,
-      { text: product.text, isDone: product.isDone },
-      (err, result) => {
-        if (err) res.status(500).send(err);
-        else res.send(result);
-      }
-    );
+    const newProduct = req.body;
+    const productId = req.params.id;
+    delete newProduct._id;
+    productRepo.update(productId, newProduct, (err, result) => {
+      if (err) res.status(500).send(err);
+      else res.send(result);
+    });
   },
 };
 
