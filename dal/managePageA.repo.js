@@ -5,7 +5,7 @@ const pageA = {
   create: (feature, next) => {
     baseRepo.connect((err, db) => {
       if (err) next(err);
-      db.collection("page-a-feature").insert(feature, next);
+      db.collection("page-a-feature").insertOne(feature, next);
     });
   },
   fetchAll: (next) => {

@@ -26,7 +26,6 @@ const categoriesController = {
   update: (req, res) => {
     const newCategory = req.body;
     const categoryId = req.params.id;
-    delete newCategory._id;
     categoriesRepo.update(categoryId, newCategory, (err, result) => {
       if (err) res.status(500).send(err);
       else res.send(result);

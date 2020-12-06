@@ -3,6 +3,7 @@ const router = express.Router();
 const expressJWT = require("express-jwt");
 const imageSave = require("../controller/uploadImage/index");
 const uploadUserImage = require("../controller/uploadUserImage");
+const uploadWeblogImage = require("../controller/uploadWeblogImg");
 
 const authMiddleware = () =>
   expressJWT({
@@ -13,5 +14,5 @@ const authMiddleware = () =>
 
 router.post("/", authMiddleware(), imageSave);
 router.post("/userImage", authMiddleware(), uploadUserImage);
-
+router.post("/weblog", authMiddleware(), uploadWeblogImage);
 module.exports = router;

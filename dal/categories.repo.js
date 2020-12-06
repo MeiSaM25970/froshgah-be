@@ -5,7 +5,7 @@ const categories = {
   create: (category, next) => {
     baseRepo.connect((err, db) => {
       if (err) next(err);
-      db.collection("categories").insert(category, next);
+      db.collection("categories").insertOne(category, next);
     });
   },
   fetchAll: (next) => {
