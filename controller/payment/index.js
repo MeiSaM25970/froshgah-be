@@ -119,7 +119,17 @@ const checkoutController = {
               };
               paymentRepo.update(data._id, newPayment, (err) => {
                 if (err) res.status(500).send(err);
-                else res.redirect(`${address.success_payment}`);
+                else {
+                  res.redirect(
+                    `${
+                      address.success_payment +
+                      "?trackingCode=" +
+                      newPayment.trackingCode +
+                      "&productId=" +
+                      newPayment.productId
+                    }`
+                  );
+                }
               });
             } else {
               const newPayment = {
@@ -141,7 +151,15 @@ const checkoutController = {
               paymentRepo.update(data._id, newPayment, (err) => {
                 if (err) res.status(500).send(err);
                 else {
-                  res.status(400).redirect(`${address.fail_payment}`);
+                  res
+                    .status(400)
+                    .redirect(
+                      `${
+                        address.fail_payment +
+                        "?productId=" +
+                        newPayment.productId
+                      }`
+                    );
                 }
               });
             }
