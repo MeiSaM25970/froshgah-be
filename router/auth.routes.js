@@ -14,5 +14,6 @@ router.post("/login", controller.login);
 router.post("/register", authMiddleware(), controller.register);
 router.get("/users", authMiddleware(), controller.fetchAll);
 router.delete("/:username", authMiddleware(), controller.deleteUser);
+router.get("/:username", authMiddleware(), controller.findUserByUsername);
 
 module.exports = router;

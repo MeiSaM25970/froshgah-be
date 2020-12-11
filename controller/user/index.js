@@ -87,53 +87,59 @@ const controller = {
     usersRepo.findByUsername(username, (err, user) => {
       if (err) res.status(500).send(err);
       else {
-        if (user.type === "superAdmin") {
-          usersRepo.fetchAll(async (err, data) => {
-            if (err) res.status(500).send(err);
-            else if (!data) res.status(404).send({ msg: "کاربری یافت نشد." });
-            else {
-              const dataLength = data.length;
-              const lastUsername = data[dataLength - 1].username;
-              await data.forEach(async (user) => {
-                if (user.type === "admin") {
-                  await delete user.password;
-                  await delete user.tokens;
-                  await fetchUsers.push(user);
-                  if (user.username === lastUsername) {
-                    if (fetchUsers.length > 0) {
-                      await res.send(fetchUsers);
-                    } else res.status(404).send({ msg: "کاربری یافت نشد." });
-                  }
-                } else {
-                  if (user.username === lastUsername) {
-                    if (fetchUsers.length > 0) {
-                      await res.send(fetchUsers);
-                    } else res.status(404).send({ msg: "کاربری یافت نشد." });
-                  }
+        usersRepo.fetchAll(async (err, data) => {
+          if (err) res.status(500).send(err);
+          else if (!data) res.status(404).send({ msg: "کاربری یافت نشد." });
+          else {
+            const dataLength = data.length;
+            const lastUsername = data[dataLength - 1].username;
+            await data.forEach(async (user) => {
+              if (user.type === "admin") {
+                await delete user.password;
+                await delete user.tokens;
+                await fetchUsers.push(user);
+                if (user.username === lastUsername) {
+                  if (fetchUsers.length > 0) {
+                    await res.send(fetchUsers);
+                  } else res.status(404).send({ msg: "کاربری یافت نشد." });
                 }
-              });
-            }
-          });
-        } else
-          res
-            .status(400)
-            .send({ msg: "شما مجاز به انجام این عملیات نیستید. " });
+              } else {
+                if (user.username === lastUsername) {
+                  if (fetchUsers.length > 0) {
+                    await res.send(fetchUsers);
+                  } else res.status(404).send({ msg: "کاربری یافت نشد." });
+                }
+              }
+            });
+          }
+        });
       }
     });
   },
   deleteUser: (req, res) => {
     const adminUsername = req.params.username;
     const userId = req.query.id;
-    usersRepo.findByUsername(adminUsername, (err, user) => {
+    usersRepo.findByUsername(adminUsername, (err) => {
       if (err) res.status(500).send(err);
       else {
-        if (user.type === "superAdmin") {
-          usersRepo.delete(userId, (err, result) => {
-            if (err) res.status(500).send(err);
-            else res.send(result);
-          });
-        } else
-          res.status(400).send({ msg: "شما مجاز به انجام این عملیات نیستید." });
+        usersRepo.delete(userId, (err, result) => {
+          if (err) res.status(500).send(err);
+          else res.send(result);
+        });
+      }
+    });
+  },
+  findUserByUsername: (req, res) => {
+    const username = req.params.username;
+    usersRepo.findByUsername(username, (err, user) => {
+      if (err) res.status(500).send(err);
+      else {
+        if (!user) res.status(404).send({ msg: "کاربر مورد نظر یافت نشد." });
+        else {
+          delete user.password;
+          delete user.tokens;
+          res.send(user);
+        }
       }
     });
   },

@@ -9,6 +9,7 @@ const userInfoController = {
           res.status(404).send({ msg: "کاربر مورد نظر یافت نشد." });
         } else {
           delete userInfo.password;
+          delete userInfo.tokens;
           res.send(userInfo);
         }
       }
