@@ -50,5 +50,22 @@ const repo = {
       }
     });
   },
+  fetchAll: (next) => {
+    baseRepo.connect((err, db) => {
+      if (err) next(err);
+      else {
+        db.collection("users").find({}).toArray(next);
+      }
+    });
+  },
+  delete: (_id, next) => {
+    baseRepo.connect((err, db) => {
+      if (err) next(err);
+      else {
+        const objId = new ObjectId(_id);
+        db.collection("users").deleteOne({ _id: objId }, next);
+      }
+    });
+  },
 };
 module.exports = repo;

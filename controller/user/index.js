@@ -51,6 +51,7 @@ const controller = {
                 email: credentials.email,
                 password: hashedPassword,
                 adminId: req.user._id,
+                type: "admin",
               },
               (err, result) => {
                 if (err) res.status(500).send(err);
@@ -77,6 +78,62 @@ const controller = {
           .catch((err) => {
             res.status(500).send(err);
           });
+      }
+    });
+  },
+  fetchAll: (req, res) => {
+    const fetchUsers = [];
+    const username = req.query.username;
+    usersRepo.findByUsername(username, (err, user) => {
+      if (err) res.status(500).send(err);
+      else {
+        if (user.type === "superAdmin") {
+          usersRepo.fetchAll(async (err, data) => {
+            if (err) res.status(500).send(err);
+            else if (!data) res.status(404).send({ msg: "کاربری یافت نشد." });
+            else {
+              const dataLength = data.length;
+              const lastUsername = data[dataLength - 1].username;
+              await data.forEach(async (user) => {
+                if (user.type === "admin") {
+                  await delete user.password;
+                  await delete user.tokens;
+                  await fetchUsers.push(user);
+                  if (user.username === lastUsername) {
+                    if (fetchUsers.length > 0) {
+                      await res.send(fetchUsers);
+                    } else res.status(404).send({ msg: "کاربری یافت نشد." });
+                  }
+                } else {
+                  if (user.username === lastUsername) {
+                    if (fetchUsers.length > 0) {
+                      await res.send(fetchUsers);
+                    } else res.status(404).send({ msg: "کاربری یافت نشد." });
+                  }
+                }
+              });
+            }
+          });
+        } else
+          res
+            .status(400)
+            .send({ msg: "شما مجاز به انجام این عملیات نیستید. " });
+      }
+    });
+  },
+  deleteUser: (req, res) => {
+    const adminUsername = req.params.username;
+    const userId = req.query.id;
+    usersRepo.findByUsername(adminUsername, (err, user) => {
+      if (err) res.status(500).send(err);
+      else {
+        if (user.type === "superAdmin") {
+          usersRepo.delete(userId, (err, result) => {
+            if (err) res.status(500).send(err);
+            else res.send(result);
+          });
+        } else
+          res.status(400).send({ msg: "شما مجاز به انجام این عملیات نیستید." });
       }
     });
   },
