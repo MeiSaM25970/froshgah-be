@@ -1,6 +1,6 @@
 const ADDRESS = {
-  api: "http://localhost:4000",
-  success_payment: "http://localhost:3000/successPayment",
-  fail_payment: "http://localhost:3000/failPayment",
+  api: "https://api.rezafarajee.ir/",
+  success_payment: "https://rezafarajee.ir/successPayment",
+  fail_payment: "https://rezafarajee.ir/failPayment",
 };
 module.exports = ADDRESS;

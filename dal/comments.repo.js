@@ -3,6 +3,8 @@ const mongoDb = require("mongodb");
 
 const comments = {
   create: (comment, next) => {
+    const weblogObjId = new mongoDb.ObjectId(comment.weblogId);
+    comment.weblogId = weblogObjId;
     baseRepo.connect((err, db) => {
       if (err) next(err);
       db.collection("comments").insertOne(comment, next);
