@@ -1,49 +1,17 @@
-const fs = require("fs");
-const path = require("path");
+const countRepo = require("../../dal/count.repo");
 const moment = require("moment-jalaali");
 
-const logDirPath = path.resolve(__dirname, "../../logs");
-const logFilePath = logDirPath.concat("/req.json");
 module.exports = (req, res, next) => {
-  fs.exists(logDirPath, (exists) => {
-    if (!exists) {
-      fs.mkdir(logDirPath, (err) => {
-        if (err) {
-          Console.log(err);
-        }
-      });
-    }
-    saveLog(req);
-    next();
-  });
-};
-
-const saveLog = (req) => {
-  fs.readFile(logFilePath, (err, data) => {
-    if (err) {
-      if (err.code === "ENOENT") {
-        data = "[]";
-        try {
-          fs.writeFileSync(logFilePath, data);
-        } catch (e) {
-          console.log(e);
-        }
-      } else {
-        console.log(err);
-      }
-    }
-    data = JSON.parse(data);
-    data.push({
-      url: req.baseUrl,
-      // headers: req.headers,
-      // body: req.body,
-      date: moment().format("YYYY/MM/DD HH:mm:ss"),
-    });
-    data = JSON.stringify(data);
-    try {
-      fs.writeFileSync(logFilePath, data);
-    } catch (e) {
-      console.log(e);
+  const count = {
+    url: req.baseUrl,
+    // headers: req.headers,
+    // body: req.body,
+    date: moment().format("YYYY/MM/DD HH:mm:ss"),
+  };
+  countRepo.create(count, (err, result) => {
+    if (err) console.log(err);
+    else {
+      next();
     }
   });
 };

@@ -43,7 +43,7 @@ const checkoutController = {
               myZPal
                 .PaymentRequest({
                   Amount: price, // In Tomans
-                  CallbackURL: `${address.api}/payment/verify`,
+                  CallbackURL: `${address.api}payment/verify`,
                   Description: description,
                   mobile: userInfo.tel,
                 })
@@ -147,6 +147,7 @@ const checkoutController = {
                 city: data.city,
                 address: data.address,
                 postCode: data.postCode,
+                status: "fail",
               };
               paymentRepo.update(data._id, newPayment, (err) => {
                 if (err) res.status(500).send(err);

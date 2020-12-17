@@ -14,7 +14,7 @@ const repo = {
     baseRepo.connect((err, db) => {
       if (err) next(err);
       else {
-        db.collection("paymentLog").find({}).toArray(next);
+        db.collection("paymentLog").find({}).sort({ date: -1 }).toArray(next);
       }
     });
   },

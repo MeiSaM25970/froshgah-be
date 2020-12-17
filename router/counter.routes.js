@@ -11,6 +11,6 @@ const authMiddleware = () =>
     algorithms: ["sha1", "RS256", "HS256"],
   });
 router.get("/", authMiddleware(), counterController.fetch);
-router.post("/", logMiddleware, counterController.create);
+router.post("/", counterController.create);
 
 module.exports = router;
