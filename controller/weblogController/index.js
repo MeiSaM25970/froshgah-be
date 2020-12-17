@@ -20,10 +20,8 @@ const weblogController = {
       if (err) res.status(500).send(err);
       else {
         if (limitDataNum) {
-          const lastObj = data.length;
           const limitData = data;
-          const startNum = lastObj - limitDataNum;
-          const newData = limitData.splice(startNum, lastObj);
+          const newData = limitData.splice(0, limitDataNum);
           res.send(newData);
         } else res.send(data);
       }
